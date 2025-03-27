@@ -1,0 +1,374 @@
+/* Team Page Specific Styles */
+:root {
+    --primary-green: #5dcb85;
+    --light-green: #e6f7ee;
+    --medium-green: #98e2bd;
+    --dark-green: #3ca366;
+    --accent-green: #75d79e;
+    --fade-green: rgba(93, 203, 133, 0.1);
+}
+
+/* Team Banner Styles */
+#team-banner {
+    background-color: var(--light-green);
+    padding: 4rem 0;
+    text-align: center;
+    margin-bottom: 3rem;
+    position: relative;
+    overflow: hidden;
+}
+
+#team-banner:before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background: linear-gradient(135deg, var(--fade-green) 25%, transparent 25%) -20px 0,
+                linear-gradient(225deg, var(--fade-green) 25%, transparent 25%) -20px 0,
+                linear-gradient(315deg, var(--fade-green) 25%, transparent 25%),
+                linear-gradient(45deg, var(--fade-green) 25%, transparent 25%);
+    background-size: 40px 40px;
+    z-index: 1;
+}
+
+#team-banner .container {
+    position: relative;
+    z-index: 2;
+}
+
+#team-banner h2 {
+    margin-bottom: 0.5rem;
+}
+
+#team-banner p {
+    color: #666;
+    font-size: 1.1rem;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Team Section Styles */
+.team-section-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+}
+
+.team-section-header h3 {
+    margin-bottom: 0.5rem;
+    position: relative;
+    display: inline-block;
+}
+
+.team-section-header h3:after {
+    content: '';
+    display: block;
+    width: 50px;
+    height: 3px;
+    background-color: var(--primary-green);
+    margin: 0.5rem auto 0;
+}
+
+.team-section-header p {
+    color: #666;
+    font-size: 1rem;
+}
+
+/* Team Grid Styles */
+.team-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
+}
+
+.team-card {
+    background-color: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.team-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(93, 203, 133, 0.15);
+}
+
+.team-image {
+    position: relative;
+    overflow: hidden;
+    height: 280px;
+}
+
+.team-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.team-card:hover .team-image img {
+    transform: scale(1.05);
+}
+
+.team-social {
+    position: absolute;
+    bottom: -40px;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    background-color: rgba(93, 203, 133, 0.9);
+    padding: 10px 0;
+    transition: bottom 0.3s ease;
+}
+
+.team-card:hover .team-social {
+    bottom: 0;
+}
+
+.team-social a {
+    color: #fff;
+    font-size: 1rem;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s ease;
+}
+
+.team-social a:hover {
+    background-color: var(--dark-green);
+}
+
+.team-info {
+    padding: 1.5rem;
+}
+
+.team-info h4 {
+    margin-bottom: 0.25rem;
+}
+
+.team-position {
+    display: block;
+    color: var(--primary-green);
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin-bottom: 0.75rem;
+}
+
+.team-info p {
+    color: #666;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+/* Join Team Section */
+#join-team {
+    background-color: var(--light-green);
+    padding: 4rem 0;
+    margin: 4rem 0;
+}
+
+.join-team-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    align-items: center;
+}
+
+.join-team-content h2 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+.join-team-content p {
+    color: #555;
+    margin-bottom: 2rem;
+    line-height: 1.6;
+}
+
+.team-benefits {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.benefit {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.benefit i {
+    color: var(--primary-green);
+    font-size: 1.25rem;
+    width: 40px;
+    height: 40px;
+    background-color: rgba(93, 203, 133, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.benefit span {
+    color: #444;
+    font-weight: 500;
+}
+
+.join-team-image {
+    position: relative;
+    height: 100%;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.join-team-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.join-team-image::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to right, rgba(93, 203, 133, 0.1), transparent);
+    z-index: 1;
+}
+
+.btn {
+    display: inline-block;
+    background-color: var(--primary-green);
+    color: #fff;
+    padding: 12px 25px;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+}
+
+.btn:hover {
+    background-color: var(--dark-green);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(93, 203, 133, 0.3);
+}
+
+/* Fade-in Animation */
+.fade-in {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.fade-in.appear {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Dark Theme Support */
+body.dark-theme .team-card {
+    background-color: #2a2a2a;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+body.dark-theme .team-info h4 {
+    color: #f0f0f0;
+}
+
+body.dark-theme .team-info p {
+    color: #bcbcbc;
+}
+
+body.dark-theme .benefit span {
+    color: #e0e0e0;
+}
+
+body.dark-theme #team-banner,
+body.dark-theme #join-team {
+    background-color: #1e2b23;
+}
+
+body.dark-theme .team-section-header p,
+body.dark-theme #team-banner p,
+body.dark-theme .join-team-content p {
+    color: #bcbcbc;
+}
+
+/* Media Queries */
+@media (max-width: 992px) {
+    .team-grid {
+        grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    }
+    
+    .join-team-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .join-team-image {
+        height: 350px;
+        order: -1;
+    }
+}
+
+@media (max-width: 768px) {
+    #team-banner {
+        padding: 3rem 0;
+    }
+    
+    #team-banner h2 {
+        font-size: 2rem;
+    }
+    
+    .team-section-header h3 {
+        font-size: 1.5rem;
+    }
+    
+    .team-grid {
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 1.5rem;
+    }
+    
+    .team-info {
+        padding: 1.2rem;
+    }
+    
+    .team-benefits {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .team-grid {
+        grid-template-columns: 1fr;
+        max-width: 320px;
+        margin: 0 auto 3rem;
+    }
+    
+    .team-image {
+        height: 300px;
+    }
+    
+    #join-team {
+        padding: 3rem 0;
+    }
+    
+    .join-team-content h2 {
+        font-size: 1.8rem;
+    }
+} 
