@@ -12,7 +12,10 @@
     { "source": "/team", "destination": "/pages/team.html" },
     { "source": "/testimonials", "destination": "/pages/testimonials.html" },
     { "source": "/:path.html", "destination": "/pages/:path.html" },
-    { "source": "/:path", "destination": "/pages/:path.html" }
+    { "source": "/:path", "destination": "/pages/:path.html" },
+    { "source": "/pages", "destination": "/pages/index.html" },
+    { "source": "/pages/", "destination": "/pages/index.html" },
+    { "source": "/(.*)", "destination": "/index.html" }
   ],
   "headers": [
     {
