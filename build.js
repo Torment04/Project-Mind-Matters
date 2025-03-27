@@ -27,28 +27,23 @@ function fixHtmlLinks(filePath) {
       originalLinks.push(match[0]);
     }
     
-    // Fix links in navigation - convert "about.html" to "/about"
-    content = content.replace(/href="([^\/][^"]+)\.html"/g, 'href="/$1"');
-    
-    // Fix links that point to pages/file.html to just /file
-    content = content.replace(/href="pages\/([^"]+)\.html"/g, 'href="/$1"');
-    
-    // Fix links for images and css
+    // Fix links for images and css - these can be safely updated
     content = content.replace(/href="\.\.\/css\//g, 'href="/css/');
     content = content.replace(/src="\.\.\/images\//g, 'src="/images/');
     
-    // Fix any remaining absolute paths to pages directory
-    content = content.replace(/href="\/pages\/([^"]+)\.html"/g, 'href="/$1"');
-    
-    // Handle special case for index.html links
-    content = content.replace(/href="index\.html"/g, 'href="/"');
-    
-    // Fix active link class for current page
-    const pageName = path.basename(filePath, '.html');
-    if (pageName === 'index') {
-      content = content.replace('href="/"', 'href="/" class="active"');
-    } else {
-      content = content.replace(`href="/${pageName}"`, `href="/${pageName}" class="active"`);
+    // Only modify navigation links if this is a page in the pages directory
+    if (filePath.includes('public/pages/')) {
+      // Fix links in navigation maintaining the .html extension
+      content = content.replace(/href="([^\/][^"]+)\.html"/g, 'href="/$1.html"');
+      content = content.replace(/href="index\.html"/g, 'href="/"');
+      
+      // Fix active link class for current page
+      const pageName = path.basename(filePath, '.html');
+      if (pageName === 'index') {
+        content = content.replace('href="/"', 'href="/" class="active"');
+      } else {
+        content = content.replace(`href="/${pageName}.html"`, `href="/${pageName}.html" class="active"`);
+      }
     }
     
     // Save a debug file if changes were made

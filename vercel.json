@@ -1,7 +1,7 @@
 {
   "version": 2,
   "outputDirectory": "public",
-  "cleanUrls": true,
+  "cleanUrls": false,
   "trailingSlash": false,
   "rewrites": [
     { "source": "/", "destination": "/pages/index.html" },
@@ -10,12 +10,7 @@
     { "source": "/contact", "destination": "/pages/contact.html" },
     { "source": "/events", "destination": "/pages/events.html" },
     { "source": "/team", "destination": "/pages/team.html" },
-    { "source": "/testimonials", "destination": "/pages/testimonials.html" },
-    { "source": "/:path.html", "destination": "/pages/:path.html" },
-    { "source": "/:path", "destination": "/pages/:path.html" },
-    { "source": "/pages", "destination": "/pages/index.html" },
-    { "source": "/pages/", "destination": "/pages/index.html" },
-    { "source": "/(.*)", "destination": "/404.html" }
+    { "source": "/testimonials", "destination": "/pages/testimonials.html" }
   ],
   "headers": [
     {
