@@ -1,13 +1,13 @@
 {
+  "version": 2,
   "cleanUrls": true,
   "trailingSlash": false,
   "rewrites": [
-    { "source": "/", "destination": "/pages/index.html" },
-    { "source": "/about", "destination": "/pages/about.html" },
-    { "source": "/blog", "destination": "/pages/blog.html" },
-    { "source": "/contact", "destination": "/pages/contact.html" },
-    { "source": "/events", "destination": "/pages/events.html" },
-    { "source": "/team", "destination": "/pages/team.html" },
-    { "source": "/testimonials", "destination": "/pages/testimonials.html" }
+    { "source": "/(.*)", "destination": "/pages/$1.html" },
+    { "source": "/", "destination": "/pages/index.html" }
+  ],
+  "routes": [
+    { "handle": "filesystem" },
+    { "src": "/(.*)", "status": 404, "dest": "/pages/index.html" }
   ]
 } 
