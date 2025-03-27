@@ -11,6 +11,27 @@ function copyFile(source, target) {
   console.log(`Copied: ${source} -> ${target}`);
 }
 
+// Function to fix HTML links in copied files
+function fixHtmlLinks(filePath) {
+  if (!filePath.endsWith('.html')) return;
+  
+  try {
+    let content = fs.readFileSync(filePath, 'utf8');
+    
+    // Replace relative navigation links
+    content = content.replace(/href="([^\/][^"]+)\.html"/g, 'href="/$1"');
+    
+    // Fix paths to css and images
+    content = content.replace(/href="\.\.\/css\//g, 'href="/css/');
+    content = content.replace(/src="\.\.\/images\//g, 'src="/images/');
+    
+    fs.writeFileSync(filePath, content);
+    console.log(`Fixed links in: ${filePath}`);
+  } catch (error) {
+    console.error(`Error fixing links in ${filePath}:`, error);
+  }
+}
+
 // Function to copy a directory
 function copyDir(source, target) {
   // Create the target directory if it doesn't exist
@@ -32,6 +53,11 @@ function copyDir(source, target) {
     } else {
       // Copy files
       copyFile(sourcePath, targetPath);
+      
+      // Fix HTML links if it's an HTML file
+      if (entry.name.endsWith('.html')) {
+        fixHtmlLinks(targetPath);
+      }
     }
   }
 }
@@ -53,6 +79,15 @@ for (const dir of dirsToCopy) {
   if (fs.existsSync(dir)) {
     copyDir(dir, path.join('public', dir));
     console.log(`Copied directory: ${dir} -> public/${dir}`);
+    
+    // Fix HTML links in all HTML files in the directory
+    if (dir === 'pages') {
+      const htmlFiles = fs.readdirSync(path.join('public', dir))
+        .filter(file => file.endsWith('.html'))
+        .map(file => path.join('public', dir, file));
+      
+      htmlFiles.forEach(fixHtmlLinks);
+    }
   } else {
     console.log(`Warning: Directory ${dir} not found, skipping.`);
   }
