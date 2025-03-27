@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "A website for Project Mind Matters - a mental health education and support initiative",
   "scripts": {
-    "start": "serve",
-    "build": "echo 'Build step completed'"
+    "start": "serve public",
+    "build": "node build.js"
   },
   "dependencies": {
     "serve": "^14.2.1"

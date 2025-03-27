@@ -1,11 +1,11 @@
 {
   "version": 2,
+  "outputDirectory": "public",
   "cleanUrls": true,
   "trailingSlash": false,
   "rewrites": [
     { "source": "/(.*)", "destination": "/pages/$1.html" },
-    { "source": "/", "destination": "/pages/index.html" },
-    { "source": "/(.*)", "destination": "/index.html" }
+    { "source": "/", "destination": "/pages/index.html" }
   ],
   "headers": [
     {
