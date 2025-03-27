@@ -31,11 +31,19 @@ function fixHtmlLinks(filePath) {
     content = content.replace(/href="\.\.\/css\//g, 'href="/css/');
     content = content.replace(/src="\.\.\/images\//g, 'src="/images/');
     
-    // Only modify navigation links if this is a page in the pages directory
+    // For pages in the pages directory, update navigation links
     if (filePath.includes('public/pages/')) {
-      // Fix links in navigation maintaining the .html extension
-      content = content.replace(/href="([^\/][^"]+)\.html"/g, 'href="/$1.html"');
+      // First, handle relative links without path (like "about.html")
+      content = content.replace(/href="([^\/\.]+)\.html"/g, 'href="/$1.html"');
+      
+      // Handle index.html specifically
       content = content.replace(/href="index\.html"/g, 'href="/"');
+      
+      // Fix links to other pages in the same directory (don't convert to clean URLs)
+      content = content.replace(/href="pages\/([^"]+)\.html"/g, 'href="/$1.html"');
+      
+      // Handle absolute paths to pages directory
+      content = content.replace(/href="\/pages\/([^"]+)\.html"/g, 'href="/$1.html"');
       
       // Fix active link class for current page
       const pageName = path.basename(filePath, '.html');
@@ -169,13 +177,13 @@ function copyDir(source, target) {
 function createSiteMap() {
   const baseUrl = 'https://project-mind-matters.vercel.app';
   const pages = [
-    '/',
-    '/about',
-    '/blog',
-    '/contact',
-    '/events',
-    '/team',
-    '/testimonials'
+    { path: '/', name: 'Home' },
+    { path: '/about.html', name: 'About' },
+    { path: '/blog.html', name: 'Blog' },
+    { path: '/contact.html', name: 'Contact' },
+    { path: '/events.html', name: 'Events' },
+    { path: '/team.html', name: 'Team' },
+    { path: '/testimonials.html', name: 'Testimonials' }
   ];
   
   let sitemapHtml = `
@@ -228,10 +236,7 @@ function createSiteMap() {
 <body>
   <h1>Project Mind Matters - Site Map</h1>
   <div class="site-map">
-    ${pages.map(page => {
-      const name = page === '/' ? 'Home' : page.substring(1).charAt(0).toUpperCase() + page.substring(2);
-      return `<a href="${page}">${name}</a>`;
-    }).join('\n    ')}
+    ${pages.map(page => `<a href="${page.path}">${page.name}</a>`).join('\n    ')}
   </div>
   <a href="/" class="back-btn">Back to Home</a>
 </body>
@@ -368,8 +373,8 @@ const notFoundPage = `
     
     <div class="navigation">
       <a href="/">Home</a>
-      <a href="/about">About Us</a>
-      <a href="/blog">Blog</a>
+      <a href="/about.html">About Us</a>
+      <a href="/blog.html">Blog</a>
       <a href="/sitemap.html">Site Map</a>
     </div>
   </div>

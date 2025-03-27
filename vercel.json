@@ -6,11 +6,17 @@
   "rewrites": [
     { "source": "/", "destination": "/pages/index.html" },
     { "source": "/about", "destination": "/pages/about.html" },
+    { "source": "/about.html", "destination": "/pages/about.html" },
     { "source": "/blog", "destination": "/pages/blog.html" },
+    { "source": "/blog.html", "destination": "/pages/blog.html" },
     { "source": "/contact", "destination": "/pages/contact.html" },
+    { "source": "/contact.html", "destination": "/pages/contact.html" },
     { "source": "/events", "destination": "/pages/events.html" },
+    { "source": "/events.html", "destination": "/pages/events.html" },
     { "source": "/team", "destination": "/pages/team.html" },
-    { "source": "/testimonials", "destination": "/pages/testimonials.html" }
+    { "source": "/team.html", "destination": "/pages/team.html" },
+    { "source": "/testimonials", "destination": "/pages/testimonials.html" },
+    { "source": "/testimonials.html", "destination": "/pages/testimonials.html" }
   ],
   "headers": [
     {
