@@ -19,6 +19,14 @@ function fixHtmlLinks(filePath) {
     let content = fs.readFileSync(filePath, 'utf8');
     const originalContent = content; // Save original for comparison
     
+    // Store original links for debugging
+    const originalLinks = [];
+    const linkRegex = /href="[^"]+"/g;
+    let match;
+    while ((match = linkRegex.exec(originalContent)) !== null) {
+      originalLinks.push(match[0]);
+    }
+    
     // Fix links in navigation - convert "about.html" to "/about"
     content = content.replace(/href="([^\/][^"]+)\.html"/g, 'href="/$1"');
     
@@ -31,6 +39,9 @@ function fixHtmlLinks(filePath) {
     
     // Fix any remaining absolute paths to pages directory
     content = content.replace(/href="\/pages\/([^"]+)\.html"/g, 'href="/$1"');
+    
+    // Handle special case for index.html links
+    content = content.replace(/href="index\.html"/g, 'href="/"');
     
     // Fix active link class for current page
     const pageName = path.basename(filePath, '.html');
@@ -47,8 +58,16 @@ function fixHtmlLinks(filePath) {
         fs.mkdirSync(debugDir, { recursive: true });
       }
       
+      // Find modified links for debugging
+      const modifiedLinks = [];
+      while ((match = linkRegex.exec(content)) !== null) {
+        modifiedLinks.push(match[0]);
+      }
+      
       const debugInfo = {
         filePath,
+        originalLinks,
+        modifiedLinks,
         changes: []
       };
       
@@ -60,6 +79,57 @@ function fixHtmlLinks(filePath) {
       fs.writeFileSync(
         path.join(debugDir, `${path.basename(filePath, '.html')}_debug.json`),
         JSON.stringify(debugInfo, null, 2)
+      );
+      
+      // Create an HTML debug view as well
+      const htmlDebug = `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Debug Info for ${path.basename(filePath)}</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    h1 { color: #333; }
+    .container { max-width: 1200px; margin: 0 auto; }
+    .file-path { background: #f5f5f5; padding: 10px; border-radius: 5px; }
+    .links-section { margin: 20px 0; }
+    .link-item { margin: 5px 0; padding: 5px; border-left: 3px solid #ccc; }
+    .original { border-left-color: #ff9800; }
+    .modified { border-left-color: #4caf50; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { text-align: left; padding: 8px; border-bottom: 1px solid #ddd; }
+    th { background-color: #f2f2f2; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Debug Information</h1>
+    <h2>File: <span class="file-path">${filePath}</span></h2>
+    
+    <div class="links-section">
+      <h3>Link Transformations</h3>
+      <table>
+        <tr>
+          <th>Original Link</th>
+          <th>Modified Link</th>
+        </tr>
+        ${originalLinks.map((link, i) => `
+          <tr>
+            <td class="original">${link}</td>
+            <td class="modified">${modifiedLinks[i] || 'No match'}</td>
+          </tr>
+        `).join('')}
+      </table>
+    </div>
+  </div>
+</body>
+</html>
+      `;
+      
+      fs.writeFileSync(
+        path.join(debugDir, `${path.basename(filePath, '.html')}_debug.html`),
+        htmlDebug
       );
     }
     
@@ -98,6 +168,83 @@ function copyDir(source, target) {
       }
     }
   }
+}
+
+// Function to create a site map file
+function createSiteMap() {
+  const baseUrl = 'https://project-mind-matters.vercel.app';
+  const pages = [
+    '/',
+    '/about',
+    '/blog',
+    '/contact',
+    '/events',
+    '/team',
+    '/testimonials'
+  ];
+  
+  let sitemapHtml = `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Site Map - Project Mind Matters</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      line-height: 1.6;
+      color: #333;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    h1 {
+      color: #9c27b0;
+      border-bottom: 2px solid #9c27b0;
+      padding-bottom: 10px;
+    }
+    .site-map {
+      margin: 20px 0;
+    }
+    .site-map a {
+      display: block;
+      padding: 8px 0;
+      color: #9c27b0;
+      text-decoration: none;
+      border-bottom: 1px solid #eee;
+    }
+    .site-map a:hover {
+      background-color: #f9f0ff;
+    }
+    .back-btn {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 8px 16px;
+      background-color: #9c27b0;
+      color: white;
+      text-decoration: none;
+      border-radius: 4px;
+    }
+    .back-btn:hover {
+      background-color: #7b1fa2;
+    }
+  </style>
+</head>
+<body>
+  <h1>Project Mind Matters - Site Map</h1>
+  <div class="site-map">
+    ${pages.map(page => {
+      const name = page === '/' ? 'Home' : page.substring(1).charAt(0).toUpperCase() + page.substring(2);
+      return `<a href="${page}">${name}</a>`;
+    }).join('\n    ')}
+  </div>
+  <a href="/" class="back-btn">Back to Home</a>
+</body>
+</html>
+  `;
+  
+  fs.writeFileSync(path.join('public', 'sitemap.html'), sitemapHtml);
+  console.log('Created site map at /sitemap.html');
 }
 
 // Create public directory if it doesn't exist
@@ -144,10 +291,12 @@ const notFoundPage = `
       padding: 50px 20px;
       background-color: #f8f9fa;
       color: #333;
+      line-height: 1.6;
     }
     h1 {
       color: #9c27b0;
       margin-bottom: 20px;
+      font-size: 36px;
     }
     p {
       margin-bottom: 20px;
@@ -165,20 +314,78 @@ const notFoundPage = `
       max-width: 800px;
       margin: 0 auto;
     }
+    .error-code {
+      display: inline-block;
+      background-color: #f1e5f9;
+      color: #9c27b0;
+      padding: 10px 20px;
+      border-radius: 30px;
+      font-weight: bold;
+      margin-bottom: 30px;
+    }
+    .navigation {
+      margin-top: 40px;
+      padding: 20px;
+      border-top: 1px solid #eee;
+    }
+    .navigation a {
+      display: inline-block;
+      margin: 0 10px;
+      padding: 8px 16px;
+      background-color: #9c27b0;
+      color: white;
+      border-radius: 4px;
+      transition: background-color 0.3s;
+    }
+    .navigation a:hover {
+      background-color: #7b1fa2;
+      text-decoration: none;
+    }
+    .countdown {
+      font-size: 16px;
+      color: #666;
+      margin-top: 20px;
+    }
   </style>
+  <script>
+    // Countdown timer
+    window.onload = function() {
+      let seconds = 5;
+      const countdownElement = document.getElementById('countdown');
+      
+      const interval = setInterval(function() {
+        seconds--;
+        countdownElement.textContent = seconds;
+        
+        if (seconds <= 0) {
+          clearInterval(interval);
+        }
+      }, 1000);
+    };
+  </script>
 </head>
 <body>
   <div class="container">
+    <span class="error-code">404</span>
     <h1>Page Not Found</h1>
-    <p>Sorry, the page you are looking for does not exist.</p>
-    <p>You will be redirected to the homepage in 5 seconds.</p>
-    <p>If you are not redirected automatically, <a href="/">click here</a> to go to the homepage.</p>
+    <p>Sorry, the page you are looking for does not exist or has been moved.</p>
+    <p>You will be redirected to the homepage in <span id="countdown">5</span> seconds.</p>
+    
+    <div class="navigation">
+      <a href="/">Home</a>
+      <a href="/about">About Us</a>
+      <a href="/blog">Blog</a>
+      <a href="/sitemap.html">Site Map</a>
+    </div>
   </div>
 </body>
 </html>
 `;
 fs.writeFileSync(path.join('public', '404.html'), notFoundPage);
 console.log('Created custom 404 page');
+
+// Create site map
+createSiteMap();
 
 // Copy directories to public
 const dirsToCopy = ['pages', 'css', 'images'];
@@ -199,5 +406,95 @@ for (const dir of dirsToCopy) {
     console.log(`Warning: Directory ${dir} not found, skipping.`);
   }
 }
+
+// Create a debug index page
+const debugIndexContent = `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Debug Information - Project Mind Matters</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    h1 {
+      color: #9c27b0;
+      border-bottom: 2px solid #9c27b0;
+      padding-bottom: 10px;
+    }
+    .summary {
+      background-color: #f8f9fa;
+      padding: 15px;
+      border-radius: 5px;
+      margin-bottom: 20px;
+    }
+    .files-list {
+      list-style-type: none;
+      padding: 0;
+    }
+    .files-list li {
+      margin-bottom: 10px;
+      padding: 10px;
+      background-color: #f1e5f9;
+      border-radius: 4px;
+    }
+    .files-list a {
+      color: #9c27b0;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    .files-list a:hover {
+      text-decoration: underline;
+    }
+    .back-btn {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 8px 16px;
+      background-color: #9c27b0;
+      color: white;
+      text-decoration: none;
+      border-radius: 4px;
+    }
+    .back-btn:hover {
+      background-color: #7b1fa2;
+    }
+  </style>
+</head>
+<body>
+  <h1>Project Mind Matters - Debug Information</h1>
+  
+  <div class="summary">
+    <h2>Site Summary</h2>
+    <p>This page provides diagnostic information about the Project Mind Matters website deployment.</p>
+    <p>The following debug files contain information about how HTML links were processed during the build.</p>
+  </div>
+
+  <h2>Debug Files</h2>
+  <ul class="files-list" id="debug-files">
+    <li>Loading debug files...</li>
+  </ul>
+
+  <a href="/" class="back-btn">Back to Home</a>
+
+  <script>
+    // This would normally list files, but in a static site we'll just show a message
+    document.getElementById('debug-files').innerHTML = '<li>Debug files are available in the /debug directory.</li>';
+  </script>
+</body>
+</html>
+`;
+
+const debugDir = path.join('public', 'debug');
+if (!fs.existsSync(debugDir)) {
+  fs.mkdirSync(debugDir, { recursive: true });
+}
+fs.writeFileSync(path.join(debugDir, 'index.html'), debugIndexContent);
+console.log('Created debug index page at /debug/index.html');
 
 console.log('Build completed successfully!'); 
