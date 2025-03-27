@@ -31,5 +31,6 @@ logs
 *.log
 
 # Package files
+# package.json  # Allowing package.json
 package-lock.json
 yarn.lock 
