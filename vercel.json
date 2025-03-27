@@ -4,10 +4,15 @@
   "trailingSlash": false,
   "rewrites": [
     { "source": "/(.*)", "destination": "/pages/$1.html" },
-    { "source": "/", "destination": "/pages/index.html" }
+    { "source": "/", "destination": "/pages/index.html" },
+    { "source": "/(.*)", "destination": "/index.html" }
   ],
-  "routes": [
-    { "handle": "filesystem" },
-    { "src": "/(.*)", "status": 404, "dest": "/pages/index.html" }
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" }
+      ]
+    }
   ]
 } 
